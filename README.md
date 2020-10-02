@@ -1,4 +1,4 @@
-## schema.graphql
+<!-- ## schema.graphql
 
 ```graphql
 type Market @model @searchable {
@@ -133,7 +133,7 @@ const emailHandler = (req, res) => {
       Source: config.adminEmail,
       ReturnPath: config.adminEmail,
       Destination: {
-      /* add customerEmail and ownerEmail to ToAddresses array after you've moved out of the sandbox for SES */ 
+      /* add customerEmail and ownerEmail to ToAddresses array after you've moved out of the sandbox for SES */
         ToAddresses: [config.adminEmail]
       },
       Message: {
@@ -193,10 +193,13 @@ app.post("/charge", chargeHandler, emailHandler);
 
 app.listen(3000, function() {
   console.log("App started");
-});
+}); -->
 
-// Export the app object. When executing the application local this does nothing. However,
+<!-- // Export the app object. When executing the application local this does nothing. However,
 // to port it to AWS Lambda we will create a wrapper around that will load the app from
 // this file
-module.exports = app;
+module.exports = app; -->
+
+```
+
 ```
