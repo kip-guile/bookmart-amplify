@@ -1,11 +1,14 @@
-import React from "react";
+import React from 'react'
+import NewStore from '../components/NewStore'
+import StoreList from '../components/StoreList'
 
-class HomePage extends React.Component {
-  state = {};
-
-  render() {
-    return <div>Home</div>;
-  }
+const HomePage = () => {
+  return (
+    <>
+      <NewStore />
+      <StoreList />
+    </>
+  )
 }
 
-export default HomePage;
+export default HomePage

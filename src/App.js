@@ -1,18 +1,42 @@
 import React from 'react'
 import { Authenticator, AmplifyTheme } from 'aws-amplify-react'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 import useAmplifyAuth from './components/UseAmplifyAuth'
+import HomePage from './pages/HomePage'
+import ProfilePage from './pages/ProfilePage'
+import StorePage from './pages/StorePage'
+import NavBar from './components/Navbar'
 import './App.css'
 
 function App() {
   const {
     state: { user },
-    handleSignOut,
+    handleSignout,
   } = useAmplifyAuth()
 
-  console.log('user =>', user)
-  console.dir(AmplifyTheme)
+  // console.log('user =>', user)
+  // console.dir(AmplifyTheme)
 
-  return !user ? <Authenticator theme={theme} /> : <div>App</div>
+  return !user ? (
+    <Authenticator theme={theme} />
+  ) : (
+    <Router>
+      <>
+        <NavBar user={user} handleSignout={handleSignout} />
+
+        <div className='app-container'>
+          <Route exact path='/' component={HomePage} />
+          <Route path='/profile' component={ProfilePage} />
+          <Route
+            path='/stores/:storeId'
+            component={({ match }) => (
+              <StorePage storeId={match.params.storeId} />
+            )}
+          />
+        </div>
+      </>
+    </Router>
+  )
 }
 
 const theme = {

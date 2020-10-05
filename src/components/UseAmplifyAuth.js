@@ -34,61 +34,58 @@ const useAmplifyAuth = () => {
   const [state, dispatch] = useReducer(amplifyAuthReducer, initialState)
   const [triggerFetch, setTriggerFetch] = useState(false)
 
-  useEffect(
-    () => {
-      let isMounted = true
+  useEffect(() => {
+    let isMounted = true
 
-      const fetchUserData = async () => {
+    const fetchUserData = async () => {
+      if (isMounted) {
+        dispatch({ type: 'FETCH_USER_DATA_INIT' })
+      }
+      try {
         if (isMounted) {
-          dispatch({ type: 'FETCH_USER_DATA_INIT' })
-        }
-        try {
-          if (isMounted) {
-            const data = await Auth.currentAuthenticatedUser()
-            if (data) {
-              dispatch({
-                type: 'FETCH_USER_DATA_SUCCESS',
-                payload: { user: data },
-              })
-            }
-          }
-        } catch (error) {
-          if (isMounted) {
-            dispatch({ type: 'FETCH_USER_DATA_FAILURE' })
+          const data = await Auth.currentAuthenticatedUser()
+          if (data) {
+            dispatch({
+              type: 'FETCH_USER_DATA_SUCCESS',
+              payload: { user: data },
+            })
           }
         }
-      }
-
-      const HubListener = () => {
-        Hub.listen('auth', (data) => {
-          const { payload } = data
-          onAuthEvent(payload)
-        })
-      }
-
-      const onAuthEvent = (payload) => {
-        switch (payload.event) {
-          case 'signIn':
-            if (isMounted) {
-              setTriggerFetch(true)
-              console.log('signed in')
-            }
-            break
-          default:
-            return
+      } catch (error) {
+        if (isMounted) {
+          dispatch({ type: 'FETCH_USER_DATA_FAILURE' })
         }
       }
+    }
 
-      HubListener()
-      fetchUserData()
+    const HubListener = () => {
+      Hub.listen('auth', (data) => {
+        const { payload } = data
+        onAuthEvent(payload)
+      })
+    }
 
-      return () => {
-        Hub.remove('auth')
-        isMounted = false
+    const onAuthEvent = (payload) => {
+      switch (payload.event) {
+        case 'signIn':
+          if (isMounted) {
+            setTriggerFetch(true)
+            console.log('signed in')
+          }
+          break
+        default:
+          return
       }
-    },
-    [triggerFetch]
-  )
+    }
+
+    HubListener()
+    fetchUserData()
+
+    return () => {
+      Hub.remove('auth')
+      isMounted = false
+    }
+  }, [triggerFetch])
 
   const handleSignout = async () => {
     try {
