@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { createContext } from 'react'
 import { Authenticator, AmplifyTheme } from 'aws-amplify-react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import useAmplifyAuth from './components/UseAmplifyAuth'
@@ -7,6 +7,8 @@ import ProfilePage from './pages/ProfilePage'
 import StorePage from './pages/StorePage'
 import NavBar from './components/Navbar'
 import './App.css'
+
+export const { Provider, Consumer } = createContext()
 
 function App() {
   const {
@@ -20,22 +22,24 @@ function App() {
   return !user ? (
     <Authenticator theme={theme} />
   ) : (
-    <Router>
-      <>
-        <NavBar user={user} handleSignout={handleSignout} />
+    <Provider value={{ user }}>
+      <Router>
+        <>
+          <NavBar user={user} handleSignout={handleSignout} />
 
-        <div className='app-container'>
-          <Route exact path='/' component={HomePage} />
-          <Route path='/profile' component={ProfilePage} />
-          <Route
-            path='/stores/:storeId'
-            component={({ match }) => (
-              <StorePage storeId={match.params.storeId} />
-            )}
-          />
-        </div>
-      </>
-    </Router>
+          <div className='app-container'>
+            <Route exact path='/' component={HomePage} />
+            <Route path='/profile' component={ProfilePage} />
+            <Route
+              path='/stores/:storeId'
+              component={({ match }) => (
+                <StorePage storeId={match.params.storeId} />
+              )}
+            />
+          </div>
+        </>
+      </Router>
+    </Provider>
   )
 }
 
