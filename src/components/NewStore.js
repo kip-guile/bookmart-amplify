@@ -13,12 +13,13 @@ const NewStore = () => {
   const [options, setOptions] = useState([])
 
   const handleAddStore = async (user) => {
+    console.log(user)
     try {
       setAddStoreDialog(false)
       const input = {
         name: name,
         tags: selectedTags,
-        owner: user.username,
+        owner: user.attributes.email,
       }
       const result = await API.graphql(graphqlOperation(createStore, { input }))
       console.log({ result })
@@ -56,7 +57,7 @@ const NewStore = () => {
               </h1>
             </div>
             <Dialog
-              title='Create new market'
+              title='Create new store'
               visible={addStoreDialog}
               onCancel={() => setAddStoreDialog(false)}
               size='large'

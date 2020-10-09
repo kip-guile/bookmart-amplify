@@ -82,7 +82,7 @@ const useAmplifyAuth = () => {
     fetchUserData()
 
     return () => {
-      Hub.remove('auth')
+      Hub.dispatch('auth')
       isMounted = false
     }
   }, [triggerFetch])

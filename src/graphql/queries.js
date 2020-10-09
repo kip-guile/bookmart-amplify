@@ -24,7 +24,7 @@ export const getStore = /* GraphQL */ `
       updatedAt
     }
   }
-`;
+`
 export const listStores = /* GraphQL */ `
   query ListStores(
     $filter: ModelStoreFilterInput
@@ -36,6 +36,14 @@ export const listStores = /* GraphQL */ `
         id
         name
         books {
+          items {
+            id
+            description
+            price
+            shipped
+            owner
+            createdAt
+          }
           nextToken
         }
         tags
@@ -46,7 +54,7 @@ export const listStores = /* GraphQL */ `
       nextToken
     }
   }
-`;
+`
 export const getBook = /* GraphQL */ `
   query GetBook($id: ID!) {
     getBook(id: $id) {
@@ -75,7 +83,7 @@ export const getBook = /* GraphQL */ `
       updatedAt
     }
   }
-`;
+`
 export const listBooks = /* GraphQL */ `
   query ListBooks(
     $filter: ModelBookFilterInput
@@ -108,7 +116,7 @@ export const listBooks = /* GraphQL */ `
       nextToken
     }
   }
-`;
+`
 export const getUser = /* GraphQL */ `
   query GetUser($id: ID!) {
     getUser(id: $id) {
@@ -128,7 +136,7 @@ export const getUser = /* GraphQL */ `
       updatedAt
     }
   }
-`;
+`
 export const searchStores = /* GraphQL */ `
   query SearchStores(
     $filter: SearchableStoreFilterInput
@@ -157,4 +165,4 @@ export const searchStores = /* GraphQL */ `
       total
     }
   }
-`;
+`
