@@ -2,10 +2,15 @@ import React, { useState } from 'react'
 import { API, graphqlOperation } from 'aws-amplify'
 import { createStore } from '../graphql/mutations'
 // prettier-ignore
-import { Form, Button, Dialog, Input, Select, Notification } from 'element-react'
+import { Form, Button, Dialog, Input, Select, Notification, isSearching } from 'element-react'
 import { Consumer } from '../App'
 
-const NewStore = () => {
+const NewStore = ({
+  handleSearch,
+  searchTerm,
+  handleSearchChange,
+  handleClearSearch,
+}) => {
   const [addStoreDialog, setAddStoreDialog] = useState(false)
   const [name, setName] = useState('')
   const [tags] = useState(['Fantasy', 'Scifi', 'Horror'])
@@ -55,12 +60,23 @@ const NewStore = () => {
                   onClick={() => setAddStoreDialog(true)}
                 />
               </h1>
-              <Form inline={true}>
+              <Form onSubmit={handleSearch} inline={true}>
                 <Form.Item>
-                  <Input placeholder='Search Markets...' icon='circle-cross' />
+                  <Input
+                    onChange={handleSearchChange}
+                    value={searchTerm}
+                    onIconClick={handleClearSearch}
+                    placeholder='Search Markets...'
+                    icon='circle-cross'
+                  />
                 </Form.Item>
                 <Form.Item>
-                  <Button type='info' icon='search'>
+                  <Button
+                    loading={isSearching}
+                    type='info'
+                    icon='search'
+                    onClick={handleSearch}
+                  >
                     Search
                   </Button>
                 </Form.Item>
