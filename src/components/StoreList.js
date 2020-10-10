@@ -1,14 +1,28 @@
 import React from 'react'
 import { Connect } from 'aws-amplify-react'
 import { listStores } from '../graphql/queries'
+import { onCreateStore } from '../graphql/subscriptions'
 import { graphqlOperation } from 'aws-amplify'
 import Error from './Error'
 import { Loading, Card, Icon, Tag } from 'element-react'
 import { Link } from 'react-router-dom'
 
 const StoreList = () => {
+  const onNewStore = (prevQuery, newData) => {
+    let updatedQuery = { ...prevQuery }
+    const updatedStoreList = [
+      newData.onCreateStore,
+      ...prevQuery.listStores.items,
+    ]
+    updatedQuery.listStores.items = updatedStoreList
+    return updatedQuery
+  }
   return (
-    <Connect query={graphqlOperation(listStores)}>
+    <Connect
+      query={graphqlOperation(listStores)}
+      subscription={graphqlOperation(onCreateStore)}
+      onSubscriptionMsg={onNewStore}
+    >
       {({ data, loading, errors }) => {
         console.log(data)
         if (errors.length > 0) return <Error errors={errors} />

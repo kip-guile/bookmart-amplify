@@ -55,7 +55,18 @@ const NewStore = () => {
                   onClick={() => setAddStoreDialog(true)}
                 />
               </h1>
+              <Form inline={true}>
+                <Form.Item>
+                  <Input placeholder='Search Markets...' icon='circle-cross' />
+                </Form.Item>
+                <Form.Item>
+                  <Button type='info' icon='search'>
+                    Search
+                  </Button>
+                </Form.Item>
+              </Form>
             </div>
+
             <Dialog
               title='Create new store'
               visible={addStoreDialog}
