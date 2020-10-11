@@ -154,6 +154,14 @@ export const searchStores = /* GraphQL */ `
         id
         name
         books {
+          items {
+            id
+            description
+            price
+            shipped
+            owner
+            createdAt
+          }
           nextToken
         }
         tags

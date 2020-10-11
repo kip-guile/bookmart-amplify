@@ -6,6 +6,7 @@ import HomePage from './pages/HomePage'
 import ProfilePage from './pages/ProfilePage'
 import StorePage from './pages/StorePage'
 import NavBar from './components/Navbar'
+import '@aws-amplify/ui/dist/style.css'
 import './App.css'
 
 export const { Provider, Consumer } = createContext()
@@ -33,7 +34,7 @@ function App() {
             <Route
               path='/stores/:storeId'
               component={({ match }) => (
-                <StorePage storeId={match.params.storeId} />
+                <StorePage user={user} storeId={match.params.storeId} />
               )}
             />
           </div>

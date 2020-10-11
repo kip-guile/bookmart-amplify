@@ -18,7 +18,6 @@ const NewStore = ({
   const [options, setOptions] = useState([])
 
   const handleAddStore = async (user) => {
-    console.log(user)
     try {
       setAddStoreDialog(false)
       const input = {
@@ -27,7 +26,6 @@ const NewStore = ({
         owner: user.attributes.email,
       }
       const result = await API.graphql(graphqlOperation(createStore, { input }))
-      console.log({ result })
       console.info(`Created mairket: id ${result.data.createStore.id}`)
       setName('')
       setSelectedTags([])

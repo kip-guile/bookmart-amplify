@@ -7,7 +7,7 @@ import Error from './Error'
 import { Loading, Card, Icon, Tag } from 'element-react'
 import { Link } from 'react-router-dom'
 
-const StoreList = () => {
+const StoreList = ({ searchResults }) => {
   const onNewStore = (prevQuery, newData) => {
     let updatedQuery = { ...prevQuery }
     const updatedStoreList = [
@@ -24,21 +24,29 @@ const StoreList = () => {
       onSubscriptionMsg={onNewStore}
     >
       {({ data, loading, errors }) => {
-        console.log(data)
         if (errors.length > 0) return <Error errors={errors} />
         if (loading || !data.listStores) return <Loading fullscreen={true} />
+        const stores =
+          searchResults.length > 0 ? searchResults : data.listStores.items
 
         return (
           <>
-            <h2 className='header'>
-              <img
-                className='large-icon'
-                src='https://icon.now.sh/store_mall_directory/527FFF'
-                alt='store-icon'
-              />
-            </h2>
+            {searchResults.length > 0 ? (
+              <h2 className='text-green'>
+                <Icon type='success' name='check' className='icon' />
+                {searchResults.length} Results
+              </h2>
+            ) : (
+              <h2 className='header'>
+                <img
+                  className='large-icon'
+                  src='https://icon.now.sh/store_mall_directory/527FFF'
+                  alt='store-icon'
+                />
+              </h2>
+            )}
             {data.listStores &&
-              data.listStores.items.map((store) => (
+              stores.map((store) => (
                 <div key={store.id} className='my-2'>
                   <Card
                     bodyStyle={{
