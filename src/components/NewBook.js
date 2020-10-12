@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 // prettier-ignore
 import {PhotoPicker} from 'aws-amplify-react'
+import { createBook } from '../graphql/mutations'
+import { Storage, Auth, API, graphqlOperation } from 'aws-amplify'
 import {
   Form,
   Button,
@@ -9,24 +11,76 @@ import {
   Radio,
   Progress,
 } from 'element-react'
+import aws_exports from '../aws-exports'
+import { convertDollarsToCents } from '../utils'
 
-const NewBook = () => {
+const NewBook = ({ storeId, store, setStore }) => {
   const [description, setDescription] = useState('')
   const [price, setPrice] = useState('')
   const [shipped, setShipped] = useState(false)
   const [imagePreview, setImagePreview] = useState('')
   const [image, setImage] = useState('')
+  const [isUploading, setIsUploading] = useState(false)
+  const [percentUploaded, setPercentUploaded] = useState(false)
 
   const clearForm = () => {
     setDescription('')
     setPrice('')
     setImagePreview('')
     setImagePreview('')
+    setIsUploading(false)
   }
 
-  const handleAddBook = () => {
-    console.log({ description, price, shipped, imagePreview, image })
-    clearForm()
+  const handleAddBook = async () => {
+    try {
+      setIsUploading(true)
+      const visibility = 'public'
+      const { identityId } = await Auth.currentCredentials()
+      const filename = `/${visibility}/${identityId}/${Date.now()}-${
+        image.name
+      }`
+      const uploadedFile = await Storage.put(filename, image.file, {
+        contentType: image.type,
+        progressCallback: (progress) => {
+          console.log(`Uploaded: ${progress.loaded}/${progress.total}`)
+          const percentUploaded = Math.round(
+            (progress.loaded / progress.total) * 100
+          )
+          setPercentUploaded(percentUploaded)
+        },
+      })
+      const file = {
+        key: uploadedFile.key,
+        bucket: aws_exports.aws_user_files_s3_bucket,
+        region: aws_exports.aws_project_region,
+      }
+      const input = {
+        bookStoreId: storeId,
+        description: description,
+        shipped: shipped,
+        price: convertDollarsToCents(price),
+        file,
+      }
+      const result = await API.graphql(graphqlOperation(createBook, { input }))
+      console.log('Created book', result)
+      const createdBook = result.data.createBook
+      const prevBooks = store.books.items.filter(
+        (item) => item.id !== createdBook.id
+      )
+      const updatedBooks = [createdBook, ...prevBooks]
+      const newStore = { ...store }
+      newStore.books.items = updatedBooks
+      setStore(newStore)
+
+      Notification({
+        title: 'Success',
+        message: 'Book successfully created!',
+        type: 'success',
+      })
+      clearForm()
+    } catch (err) {
+      console.error('Error adding book', err)
+    }
   }
 
   return (
@@ -77,6 +131,13 @@ const NewBook = () => {
               alt='book preview'
             />
           )}
+          {percentUploaded > 0 && (
+            <Progress
+              type='circle'
+              className='progress'
+              percentage={percentUploaded}
+            />
+          )}
           <PhotoPicker
             // title='Book Image'
             preview='hidden'
@@ -109,11 +170,12 @@ const NewBook = () => {
           />
           <Form.Item>
             <Button
-              disabled={!image || !description || !price}
+              disabled={!image || !description || !price || isUploading}
               type='primary'
               onClick={handleAddBook}
+              loading={isUploading}
             >
-              Add Book
+              {isUploading ? 'Uploading...' : 'Add Book'}
             </Button>
           </Form.Item>
         </Form>

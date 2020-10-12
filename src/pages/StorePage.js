@@ -1,15 +1,43 @@
 import React, { useEffect, useState } from 'react'
 import { API, graphqlOperation } from 'aws-amplify'
-import { getStore } from '../graphql/queries'
 import { Loading, Tabs, Icon } from 'element-react'
 import { Link } from 'react-router-dom'
 import NewBook from '../components/NewBook'
 import Books from '../components/Books'
 
+export const getStore = /* GraphQL */ `
+  query GetStore($id: ID!) {
+    getStore(id: $id) {
+      id
+      name
+      books {
+        items {
+          id
+          description
+          price
+          shipped
+          owner
+          file {
+            key
+          }
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      tags
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`
+
 const StorePage = ({ storeId, user }) => {
   const [store, setStore] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isStoreOwner, setIsStoreOwner] = useState(false)
+  console.log(store)
   const handleGetStore = async () => {
     const input = {
       id: storeId,
@@ -60,7 +88,7 @@ const StorePage = ({ storeId, user }) => {
             }
             name='1'
           >
-            <NewBook />
+            <NewBook storeId={storeId} setStore={setStore} store={store} />
           </Tabs.Pane>
         )}
         <Tabs.Pane
@@ -72,11 +100,16 @@ const StorePage = ({ storeId, user }) => {
           }
           name='2'
         >
-          {/* <div className='products-list'>
-            {store.books.items.map(book => (
-              <Books book={book} />
+          <div className='product-list'>
+            {store.books.items.map((book) => (
+              <Books
+                key={book.id}
+                book={book}
+                setStore={setStore}
+                store={store}
+              />
             ))}
-          </div> */}
+          </div>
         </Tabs.Pane>
       </Tabs>
     </>
