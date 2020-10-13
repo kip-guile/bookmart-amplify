@@ -37,7 +37,7 @@ const StorePage = ({ storeId, user }) => {
   const [store, setStore] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isStoreOwner, setIsStoreOwner] = useState(false)
-  console.log(store)
+
   const handleGetStore = async () => {
     const input = {
       id: storeId,

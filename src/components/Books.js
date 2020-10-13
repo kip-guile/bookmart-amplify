@@ -14,6 +14,7 @@ const Books = ({ book, setStore, store }) => {
   const [description, setDescription] = useState('')
   const [price, setPrice] = useState('')
   const [shipped, setShipped] = useState(false)
+  // console.log(store)
 
   const handleSetState = () => {
     setUpdatedBookDialog(true)
@@ -83,7 +84,8 @@ const Books = ({ book, setStore, store }) => {
   return (
     <Consumer>
       {({ user }) => {
-        const isProductOwner = user && user.attributes.sub === book.owner
+        const isProductOwner = user && user.attributes.email === store.owner
+
         return (
           <div className='card-container'>
             <Card bodyStyle={{ padding: 0, minWidth: '200px' }}>
