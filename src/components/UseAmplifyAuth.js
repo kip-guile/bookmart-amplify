@@ -1,5 +1,7 @@
 import { useReducer, useState, useEffect } from 'react'
-import { Auth, Hub } from 'aws-amplify'
+import { Auth, Hub, API, graphqlOperation } from 'aws-amplify'
+import { getUser } from '../graphql/queries'
+import { registerUser } from '../graphql/mutations'
 
 const amplifyAuthReducer = (state, action) => {
   switch (action.type) {
@@ -58,6 +60,33 @@ const useAmplifyAuth = () => {
       }
     }
 
+    const registerNewUser = async (signInData) => {
+      const getUserInput = {
+        id: signInData.signInUserSession.idToken.payload.sub,
+      }
+      const { data } = await API.graphql(
+        graphqlOperation(getUser, getUserInput)
+      )
+      if (!data.getUser) {
+        try {
+          const registerUserInput = {
+            ...getUserInput,
+            username: signInData.username,
+            email: signInData.signInUserSession.idToken.payload.email,
+            registered: true,
+          }
+          const newUser = await API.graphql(
+            graphqlOperation(registerUser, {
+              input: registerUserInput,
+            })
+          )
+          console.log({ newUser })
+        } catch (err) {
+          console.error('Error registering new user', err)
+        }
+      }
+    }
+
     const HubListener = () => {
       Hub.listen('auth', (data) => {
         const { payload } = data
@@ -71,6 +100,7 @@ const useAmplifyAuth = () => {
           if (isMounted) {
             setTriggerFetch(true)
             console.log('signed in')
+            registerNewUser(payload.data)
           }
           break
         default:
