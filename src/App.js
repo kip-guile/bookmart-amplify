@@ -1,15 +1,17 @@
 import React, { createContext } from 'react'
 import { Authenticator, AmplifyTheme } from 'aws-amplify-react'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { Router, Route } from 'react-router-dom'
 import useAmplifyAuth from './components/UseAmplifyAuth'
 import HomePage from './pages/HomePage'
 import ProfilePage from './pages/ProfilePage'
 import StorePage from './pages/StorePage'
 import NavBar from './components/Navbar'
+import createBrowserHistory from 'history/createBrowserHistory'
 import '@aws-amplify/ui/dist/style.css'
 import './App.css'
 
 export const { Provider, Consumer } = createContext()
+export const history = createBrowserHistory()
 
 function App() {
   const {
@@ -24,7 +26,7 @@ function App() {
     <Authenticator theme={theme} />
   ) : (
     <Provider value={{ user }}>
-      <Router>
+      <Router history={history}>
         <>
           <NavBar user={user} handleSignout={handleSignout} />
 
