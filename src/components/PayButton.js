@@ -27,7 +27,7 @@ const PayButton = ({ book, userAttributes }) => {
     city: source.address_city,
     country: source.address_country,
     address_line1: source.address_line1,
-    address_state: source.address_state,
+    address_state: 'Lagos',
     address_zip: source.address_zip,
   })
 
@@ -57,12 +57,15 @@ const PayButton = ({ book, userAttributes }) => {
         }
         const input = {
           orderUserId: userAttributes.sub,
-          orderProductId: book.id,
+          orderBookId: book.id,
           shippingAddress,
+          createdAt: new Date().toString(),
         }
+
         const order = await API.graphql(
           graphqlOperation(createOrder, { input })
         )
+
         console.log({ order })
         Notification({
           title: 'Success',

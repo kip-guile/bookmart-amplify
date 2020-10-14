@@ -27,7 +27,7 @@ export const createStore = /* GraphQL */ `
       updatedAt
     }
   }
-`;
+`
 export const updateStore = /* GraphQL */ `
   mutation UpdateStore(
     $input: UpdateStoreInput!
@@ -54,7 +54,7 @@ export const updateStore = /* GraphQL */ `
       updatedAt
     }
   }
-`;
+`
 export const deleteStore = /* GraphQL */ `
   mutation DeleteStore(
     $input: DeleteStoreInput!
@@ -81,7 +81,7 @@ export const deleteStore = /* GraphQL */ `
       updatedAt
     }
   }
-`;
+`
 export const createBook = /* GraphQL */ `
   mutation CreateBook(
     $input: CreateBookInput!
@@ -113,7 +113,7 @@ export const createBook = /* GraphQL */ `
       updatedAt
     }
   }
-`;
+`
 export const updateBook = /* GraphQL */ `
   mutation UpdateBook(
     $input: UpdateBookInput!
@@ -145,7 +145,7 @@ export const updateBook = /* GraphQL */ `
       updatedAt
     }
   }
-`;
+`
 export const deleteBook = /* GraphQL */ `
   mutation DeleteBook(
     $input: DeleteBookInput!
@@ -177,7 +177,7 @@ export const deleteBook = /* GraphQL */ `
       updatedAt
     }
   }
-`;
+`
 export const registerUser = /* GraphQL */ `
   mutation RegisterUser(
     $input: CreateUserInput!
@@ -200,7 +200,7 @@ export const registerUser = /* GraphQL */ `
       updatedAt
     }
   }
-`;
+`
 export const updateUser = /* GraphQL */ `
   mutation UpdateUser(
     $input: UpdateUserInput!
@@ -223,7 +223,7 @@ export const updateUser = /* GraphQL */ `
       updatedAt
     }
   }
-`;
+`
 export const createOrder = /* GraphQL */ `
   mutation CreateOrder(
     $input: CreateOrderInput!
@@ -234,35 +234,16 @@ export const createOrder = /* GraphQL */ `
       book {
         id
         description
-        store {
-          id
-          name
-          tags
-          owner
-          createdAt
-          updatedAt
-        }
-        file {
-          bucket
-          region
-          key
-        }
         price
         shipped
         owner
         createdAt
-        updatedAt
       }
       user {
         id
         username
         email
         registered
-        orders {
-          nextToken
-        }
-        createdAt
-        updatedAt
       }
       shippingAddress {
         city
@@ -272,7 +253,6 @@ export const createOrder = /* GraphQL */ `
         address_zip
       }
       createdAt
-      updatedAt
     }
   }
-`;
+`
