@@ -4,6 +4,7 @@ import { Loading, Tabs, Icon } from 'element-react'
 import { Link } from 'react-router-dom'
 import NewBook from '../components/NewBook'
 import Books from '../components/Books'
+import { formatProductDate } from '../utils'
 
 export const getStore = /* GraphQL */ `
   query GetStore($id: ID!) {
@@ -33,10 +34,11 @@ export const getStore = /* GraphQL */ `
   }
 `
 
-const StorePage = ({ storeId, user }) => {
+const StorePage = ({ storeId, user, userAttributes }) => {
   const [store, setStore] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isStoreOwner, setIsStoreOwner] = useState(false)
+  const [isEmailVerified, setIsEmailVerified] = useState(false)
 
   const handleGetStore = async () => {
     const input = {
@@ -53,12 +55,22 @@ const StorePage = ({ storeId, user }) => {
     }
   }
 
+  const checkEmailVerified = () => {
+    if (userAttributes) {
+      setIsEmailVerified(userAttributes.email_verified)
+    }
+  }
+
   useEffect(() => {
     handleGetStore()
   }, [])
 
   useEffect(() => {
     checkStoreOwner()
+  }, [store, user])
+
+  useEffect(() => {
+    checkEmailVerified()
   }, [store, user])
 
   return isLoading ? (
@@ -74,7 +86,7 @@ const StorePage = ({ storeId, user }) => {
       <div className='items-center pt-2'>
         <span style={{ color: 'var(--lightSquidInk)', paddingBottom: '1em' }}>
           <Icon name='date' className='icon' />
-          {store.createdAt}
+          {formatProductDate(store.createdAt)}
         </span>
       </div>
       <Tabs type='border-card' value={isStoreOwner ? '1' : '2'}>
@@ -88,7 +100,13 @@ const StorePage = ({ storeId, user }) => {
             }
             name='1'
           >
-            <NewBook storeId={storeId} setStore={setStore} store={store} />
+            {isEmailVerified ? (
+              <NewBook storeId={storeId} setStore={setStore} store={store} />
+            ) : (
+              <Link to='/profile' className='header'>
+                Verify your email before adding products
+              </Link>
+            )}
           </Tabs.Pane>
         )}
         <Tabs.Pane

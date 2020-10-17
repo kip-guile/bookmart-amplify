@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { S3Image } from 'aws-amplify-react'
 import { API, graphqlOperation } from 'aws-amplify'
+import { Link } from 'react-router-dom'
 // prettier-ignore
 import { Notification, Popover, Button, Dialog, Card, Form, Input, Radio } from "element-react";
 import { convertCentsToDollars, convertDollarsToCents } from '../utils'
@@ -83,8 +84,11 @@ const Books = ({ book, setStore, store }) => {
   }
   return (
     <Consumer>
-      {({ user }) => {
-        const isProductOwner = user && user.attributes.email === store.owner
+      {({ user, userAttributes }) => {
+        const isProductOwner =
+          userAttributes && userAttributes.email === store.owner
+
+        const isEmailVerified = userAttributes && userAttributes.email_verified
 
         return (
           <div className='card-container'>
@@ -112,17 +116,15 @@ const Books = ({ book, setStore, store }) => {
                   <span className='mx-1'>
                     ${convertCentsToDollars(book.price)}
                   </span>
-                  {
-                    // isEmailVerified ?
+                  {isEmailVerified ? (
                     !isProductOwner && (
-                      <PayButton book={book} userAttributes={user.attributes} />
+                      <PayButton book={book} userAttributes={userAttributes} />
                     )
-                    //  : (
-                    //   <Link to='/profile' className='link'>
-                    //     Verify Email
-                    //   </Link>
-                    // )
-                  }
+                  ) : (
+                    <Link to='/profile' className='link'>
+                      Verify Email
+                    </Link>
+                  )}
                 </div>
               </div>
             </Card>

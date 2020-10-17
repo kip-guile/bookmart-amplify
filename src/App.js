@@ -39,7 +39,7 @@ function App() {
   return !user ? (
     <Authenticator theme={theme} />
   ) : (
-    <Provider value={{ user }}>
+    <Provider value={{ user, userAttributes }}>
       <Router history={history}>
         <>
           <NavBar user={user} handleSignout={handleSignout} />
@@ -55,7 +55,11 @@ function App() {
             <Route
               path='/stores/:storeId'
               component={({ match }) => (
-                <StorePage user={user} storeId={match.params.storeId} />
+                <StorePage
+                  user={user}
+                  userAttributes={userAttributes}
+                  storeId={match.params.storeId}
+                />
               )}
             />
           </div>
