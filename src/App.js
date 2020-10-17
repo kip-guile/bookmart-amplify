@@ -19,7 +19,6 @@ function App() {
     handleSignout,
   } = useAmplifyAuth()
 
-  // console.log('user =>', user)
   // console.dir(AmplifyTheme)
 
   return !user ? (
