@@ -1,4 +1,5 @@
-import React, { createContext } from 'react'
+import React, { useEffect, useState, createContext } from 'react'
+import { Auth } from 'aws-amplify'
 import { Authenticator, AmplifyTheme } from 'aws-amplify-react'
 import { Router, Route } from 'react-router-dom'
 import useAmplifyAuth from './components/UseAmplifyAuth'
@@ -14,11 +15,25 @@ export const { Provider, Consumer } = createContext()
 export const history = createBrowserHistory()
 
 function App() {
+  const [userAttributes, setuserAttributes] = useState(null)
   const {
     state: { user },
     handleSignout,
   } = useAmplifyAuth()
 
+  const getUserAttributes = async (authUserData) => {
+    const attributesArr = await Auth.userAttributes(authUserData)
+    const attributesObj = Auth.attributesToObject(attributesArr)
+    setuserAttributes(attributesObj)
+  }
+
+  useEffect(() => {
+    if (user) {
+      getUserAttributes(user)
+    }
+  }, [user])
+
+  console.log(userAttributes)
   // console.dir(AmplifyTheme)
 
   return !user ? (
@@ -33,7 +48,9 @@ function App() {
             <Route exact path='/' component={HomePage} />
             <Route
               path='/profile'
-              component={() => <ProfilePage user={user} />}
+              component={() => (
+                <ProfilePage userAttributes={userAttributes} user={user} />
+              )}
             />
             <Route
               path='/stores/:storeId'

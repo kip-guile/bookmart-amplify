@@ -37,12 +37,12 @@ export const getUser = /* GraphQL */ `
   }
 `
 
-const ProfilePage = ({ user }) => {
+const ProfilePage = ({ user, userAttributes }) => {
   const [orders, setOrders] = useState([])
   const [emailDialog, setEmailDialog] = useState(false)
   const [verificationCode, setVerificationCode] = useState('')
   const [verificationForm, setVerificationForm] = useState(false)
-  const [email, setEmail] = useState(user.attributes && user.attributes.email)
+  const [email, setEmail] = useState(userAttributes && userAttributes.email)
   const [columns, setColumns] = useState([
     { prop: 'name', width: '150' },
     { prop: 'value', width: '330' },
@@ -51,7 +51,7 @@ const ProfilePage = ({ user }) => {
       width: '150',
       render: (row) => {
         if (row.name === 'Email') {
-          const emailVerified = user.attributes.email_verified
+          const emailVerified = userAttributes.email_verified
           return emailVerified ? (
             <Tag type='success'>Verified</Tag>
           ) : (
@@ -94,10 +94,10 @@ const ProfilePage = ({ user }) => {
   }
 
   useEffect(() => {
-    if (user.attributes) {
-      getUserOrders(user.attributes.sub)
+    if (userAttributes) {
+      getUserOrders(userAttributes.sub)
     }
-  }, [user.attributes])
+  }, [userAttributes])
 
   const handleUpdateEmail = async () => {
     try {
@@ -174,7 +174,7 @@ const ProfilePage = ({ user }) => {
   }
 
   return (
-    user.attributes && (
+    userAttributes && (
       <>
         <Tabs activeName='1' className='profile-tabs'>
           <Tabs.Pane
@@ -192,7 +192,7 @@ const ProfilePage = ({ user }) => {
               data={[
                 {
                   name: 'Your Id',
-                  value: user.attributes.sub,
+                  value: userAttributes.sub,
                 },
                 {
                   name: 'Username',
@@ -200,11 +200,11 @@ const ProfilePage = ({ user }) => {
                 },
                 {
                   name: 'Email',
-                  value: user.attributes.email,
+                  value: userAttributes.email,
                 },
                 {
                   name: 'Phone Number',
-                  value: user.attributes.phone_number,
+                  value: userAttributes.phone_number,
                 },
                 {
                   name: 'Delete Profile',
