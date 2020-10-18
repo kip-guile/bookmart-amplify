@@ -1,41 +1,35 @@
 import React from 'react'
-import { Menu as Nav, Icon, Button } from 'element-react'
+import { Menu, Button } from 'antd'
+import { BookOutlined, SettingOutlined } from '@ant-design/icons'
 import { NavLink } from 'react-router-dom'
 
 const Navbar = ({ user, handleSignout }) => (
-  <Nav mode='horizontal' theme='dark' defaultActive='1'>
-    <div className='nav-container'>
-      <Nav.Item index='1'>
-        <NavLink to='/' className='nav-link'>
-          <span className='app-title'>
-            <img
-              src='https://icon.now.sh/account_balance/f90'
-              alt='Logo'
-              className='app-icon'
-            />
-            BookMart
-          </span>
-        </NavLink>
-      </Nav.Item>
-
-      <div className='nav-items'>
-        <Nav.Item index='2'>
-          <span className='app-user'>Hello, {user.attributes.email}</span>
-        </Nav.Item>
-        <Nav.Item index='3'>
-          <NavLink to='/profile' className='nav-link'>
-            <Icon name='setting' />
-            Profile
-          </NavLink>
-        </Nav.Item>
-        <Nav.Item index='4'>
-          <Button onClick={handleSignout} type='warning'>
-            Sign Out
-          </Button>
-        </Nav.Item>
-      </div>
-    </div>
-  </Nav>
+  <Menu
+    style={{ display: 'flex', justifyContent: 'space-between' }}
+    mode='horizontal'
+  >
+    <Menu.Item key='1'>
+      <NavLink to='/' className='nav-link'>
+        <span className='app-title'>
+          <BookOutlined style={{ fontSize: '2rem' }} />
+          BookMart
+        </span>
+      </NavLink>
+    </Menu.Item>
+    <Menu.Item disabled key='2'>
+      <span className='app-user'>Hello, {user.attributes.email}</span>
+    </Menu.Item>
+    <Menu.Item key='3' icon={<SettingOutlined />}>
+      <NavLink to='/profile' className='nav-link'>
+        Profile
+      </NavLink>
+    </Menu.Item>
+    <Menu.Item key='4'>
+      <Button onClick={handleSignout} type='warning'>
+        Sign Out
+      </Button>
+    </Menu.Item>
+  </Menu>
 )
 
 export default Navbar

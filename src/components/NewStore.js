@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { API, graphqlOperation } from 'aws-amplify'
 import { createStore } from '../graphql/mutations'
+import { EditOutlined } from '@ant-design/icons'
 // prettier-ignore
 import { Form, Button, Dialog, Input, Select, Notification, isSearching } from 'element-react'
 import { Consumer } from '../App'
@@ -51,12 +52,7 @@ const NewStore = ({
             <div className='market-header'>
               <h1 className='market-title'>
                 Create Your Store
-                <Button
-                  type='text'
-                  icon='edit'
-                  className='market-title-button'
-                  onClick={() => setAddStoreDialog(true)}
-                />
+                <EditOutlined onClick={() => setAddStoreDialog(true)} />
               </h1>
               <Form onSubmit={handleSearch} inline={true}>
                 <Form.Item>
@@ -64,7 +60,7 @@ const NewStore = ({
                     onChange={handleSearchChange}
                     value={searchTerm}
                     onIconClick={handleClearSearch}
-                    placeholder='Search Markets...'
+                    placeholder='Search Stores...'
                     icon='circle-cross'
                   />
                 </Form.Item>

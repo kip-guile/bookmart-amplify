@@ -1,11 +1,14 @@
 import React from 'react'
 import { Connect } from 'aws-amplify-react'
 import { listStores } from '../graphql/queries'
+import { ShopOutlined } from '@ant-design/icons'
 import { onCreateStore } from '../graphql/subscriptions'
 import { graphqlOperation } from 'aws-amplify'
 import Error from './Error'
-import { Loading, Card, Icon, Tag } from 'element-react'
+import { Card, Tag } from 'antd'
+import { Loading, Icon } from 'element-react'
 import { Link } from 'react-router-dom'
+import { ShoppingCartOutlined } from '@ant-design/icons'
 
 const StoreList = ({ searchResults }) => {
   const onNewStore = (prevQuery, newData) => {
@@ -37,53 +40,67 @@ const StoreList = ({ searchResults }) => {
                 {searchResults.length} Results
               </h2>
             ) : (
-              <h2 className='header'>
-                <img
-                  className='large-icon'
-                  src='https://icon.now.sh/store_mall_directory/527FFF'
-                  alt='store-icon'
-                />
-              </h2>
+              <div>
+                <h2 className='header'>
+                  <ShopOutlined style={{ fontSize: '2rem' }} />
+                  Available Stores
+                </h2>
+              </div>
             )}
-            {data.listStores &&
-              stores.map((store) => (
-                <div key={store.id} className='my-2'>
-                  <Card
-                    bodyStyle={{
-                      padding: '0.7em',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <div>
-                      <span className='flex'>
-                        <Link className='link' to={`/stores/${store.id}`}>
-                          {store.name}
-                        </Link>
-                        <span style={{ color: 'var(--darkAmazonOrange)' }}>
-                          {store.books.items.length}
-                        </span>
-                        <img
-                          src='https://icon.now.sh/shopping_cart/f60'
-                          alt='Shopping Cart'
-                        />
-                      </span>
-                      <div style={{ color: 'var(--lightSquidInk)' }}>
-                        {store.owner}
-                      </div>
-                    </div>
-                    <div>
-                      {store.tags &&
-                        store.tags.map((tag) => (
-                          <Tag key={tag} type='danger' className='mx-1'>
-                            {tag}
+            <div
+              div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                justifyContent: 'space-between',
+              }}
+            >
+              {data.listStores &&
+                stores.map((store) => (
+                  <div key={store.id} className='my-2'>
+                    <Card
+                      title={
+                        <span className='flex'>
+                          <Link className='link' to={`/stores/${store.id}`}>
+                            {store.name}
+                          </Link>
+                          <Tag color='magenta'>
+                            {store.books.items.length} titles
                           </Tag>
-                        ))}
-                    </div>
-                  </Card>
-                </div>
-              ))}
+                        </span>
+                      }
+                      extra={
+                        <span>
+                          <ShoppingCartOutlined
+                            style={{ fontSize: '1.5rem' }}
+                          />
+                        </span>
+                      }
+                      style={{ width: 300, height: 200 }}
+                    >
+                      <div>
+                        <span className='flex'></span>
+                        <div
+                          style={{
+                            color: 'var(--lightSquidInk)',
+                            marginBottom: '2rem',
+                          }}
+                        >
+                          {store.owner}
+                        </div>
+                      </div>
+                      <div>
+                        {store.tags &&
+                          store.tags.map((tag) => (
+                            <Tag key={tag} color='green'>
+                              {tag}
+                            </Tag>
+                          ))}
+                      </div>
+                    </Card>
+                  </div>
+                ))}
+            </div>
           </>
         )
       }}
