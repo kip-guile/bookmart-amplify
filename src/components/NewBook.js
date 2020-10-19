@@ -42,7 +42,6 @@ const NewBook = ({ storeId, store, setStore }) => {
       const uploadedFile = await Storage.put(filename, image.file, {
         contentType: image.type,
         progressCallback: (progress) => {
-          console.log(`Uploaded: ${progress.loaded}/${progress.total}`)
           const percentUploaded = Math.round(
             (progress.loaded / progress.total) * 100
           )
@@ -62,7 +61,6 @@ const NewBook = ({ storeId, store, setStore }) => {
         file,
       }
       const result = await API.graphql(graphqlOperation(createBook, { input }))
-      console.log('Created book', result)
       const createdBook = result.data.createBook
       const prevBooks = store.books.items.filter(
         (item) => item.id !== createdBook.id

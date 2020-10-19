@@ -49,7 +49,7 @@ const PayButton = ({ book, userAttributes }) => {
           },
         },
       })
-      console.log({ result })
+
       if (result.charge.status === 'succeeded') {
         let shippingAddress = null
         if (book.shipped) {
@@ -66,7 +66,6 @@ const PayButton = ({ book, userAttributes }) => {
           graphqlOperation(createOrder, { input })
         )
 
-        console.log({ order })
         Notification({
           title: 'Success',
           message: `${result.message}`,

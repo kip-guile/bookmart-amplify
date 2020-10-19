@@ -80,7 +80,6 @@ const useAmplifyAuth = () => {
               input: registerUserInput,
             })
           )
-          console.log({ newUser })
         } catch (err) {
           console.error('Error registering new user', err)
         }

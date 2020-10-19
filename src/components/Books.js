@@ -19,7 +19,6 @@ const Books = ({ book, setStore, store }) => {
   const [description, setDescription] = useState('')
   const [price, setPrice] = useState('')
   const [shipped, setShipped] = useState(false)
-  // console.log(store)
 
   const handleSetState = () => {
     setUpdatedBookDialog(true)
@@ -38,7 +37,6 @@ const Books = ({ book, setStore, store }) => {
         price: convertDollarsToCents(price),
       }
       const result = await API.graphql(graphqlOperation(updateBook, { input }))
-      console.log({ result })
       const updatedBook = result.data.updateBook
       const updatedBookIndex = store.books.items.findIndex(
         (item) => item.id === updatedBook.id

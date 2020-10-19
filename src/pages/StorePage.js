@@ -126,47 +126,6 @@ const StorePage = ({ storeId, user, userAttributes }) => {
           </div>
         </TabPane>
       </Tabs>
-      {/* <Tabs type='border-card' value={isStoreOwner ? '1' : '2'}>
-        {isStoreOwner && (
-          <Tabs.Pane
-            label={
-              <>
-                <Icon name='plus' className='icon' />
-                Add Books
-              </>
-            }
-            name='1'
-          >
-            {isEmailVerified ? (
-              <NewBook storeId={storeId} setStore={setStore} store={store} />
-            ) : (
-              <Link to='/profile' className='header'>
-                Verify your email before adding products
-              </Link>
-            )}
-          </Tabs.Pane>
-        )}
-        <Tabs.Pane
-          label={
-            <>
-              <Icon name='menu' className='icon' />
-              Books ({store.books.items.length})
-            </>
-          }
-          name='2'
-        >
-          <div className='product-list'>
-            {store.books.items.map((book) => (
-              <Books
-                key={book.id}
-                book={book}
-                setStore={setStore}
-                store={store}
-              />
-            ))}
-          </div>
-        </Tabs.Pane>
-      </Tabs> */}
     </>
   )
 }

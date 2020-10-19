@@ -33,7 +33,6 @@ function App() {
     }
   }, [user])
 
-  console.log(userAttributes)
   // console.dir(AmplifyTheme)
 
   return !user ? (

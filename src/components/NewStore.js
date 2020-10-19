@@ -14,7 +14,7 @@ const NewStore = ({
 }) => {
   const [addStoreDialog, setAddStoreDialog] = useState(false)
   const [name, setName] = useState('')
-  const [tags] = useState(['Fantasy', 'Scifi', 'Horror'])
+  const [tags] = useState(['Fiction', 'Non Fiction'])
   const [selectedTags, setSelectedTags] = useState([])
   const [options, setOptions] = useState([])
 
