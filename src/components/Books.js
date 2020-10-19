@@ -1,13 +1,17 @@
 import React, { useState } from 'react'
+import { Card } from 'antd'
+import { CarOutlined, MailOutlined } from '@ant-design/icons'
 import { S3Image } from 'aws-amplify-react'
 import { API, graphqlOperation } from 'aws-amplify'
 import { Link } from 'react-router-dom'
 // prettier-ignore
-import { Notification, Popover, Button, Dialog, Card, Form, Input, Radio } from "element-react";
+import { Notification, Popover, Button, Dialog, Form, Input, Radio } from "element-react";
 import { convertCentsToDollars, convertDollarsToCents } from '../utils'
 import { Consumer } from '../App'
 import { updateBook, deleteBook } from '../graphql/mutations'
 import PayButton from './PayButton'
+
+const { Meta } = Card
 
 const Books = ({ book, setStore, store }) => {
   const [updatedBookDialog, setUpdatedBookDialog] = useState(false)
@@ -92,41 +96,47 @@ const Books = ({ book, setStore, store }) => {
 
         return (
           <div className='card-container'>
-            <Card bodyStyle={{ padding: 0, minWidth: '200px' }}>
-              <S3Image
-                imgKey={book.file.key}
-                // onLoad={(url) => console.log(url)}
-                theme={{
-                  photoImg: { maxWidth: '100%', maxHeight: '100%' },
-                }}
+            <Card
+              hoverable
+              style={{ width: 240 }}
+              cover={
+                <S3Image
+                  imgKey={book.file.key}
+                  // onLoad={(url) => console.log(url)}
+                  theme={{
+                    photoImg: { maxWidth: '100%', maxHeight: '100%' },
+                  }}
+                />
+              }
+            >
+              <Meta
+                title={book.description}
+                description={
+                  <div className='card-body'>
+                    <div className='items-center'>
+                      {book.shipped ? <CarOutlined /> : <MailOutlined />}
+                      {book.shipped ? 'Shipped' : 'Emailed'}
+                    </div>
+                    <div className='text-right'>
+                      <span className='mx-1'>
+                        ${convertCentsToDollars(book.price)}
+                      </span>
+                      {isEmailVerified ? (
+                        !isProductOwner && (
+                          <PayButton
+                            book={book}
+                            userAttributes={userAttributes}
+                          />
+                        )
+                      ) : (
+                        <Link to='/profile' className='link'>
+                          Verify Email
+                        </Link>
+                      )}
+                    </div>
+                  </div>
+                }
               />
-              <div className='card-body'>
-                <h3 className='m-0'>{book.description}</h3>
-                <div className='items-center'>
-                  <img
-                    src={`https://icon.now.sh/${
-                      book.shipped ? 'markunread_mailbox' : 'mail'
-                    }`}
-                    alt='Shipping Icon'
-                    className='icon'
-                  />
-                  {book.shipped ? 'Shipped' : 'Emailed'}
-                </div>
-                <div className='text-right'>
-                  <span className='mx-1'>
-                    ${convertCentsToDollars(book.price)}
-                  </span>
-                  {isEmailVerified ? (
-                    !isProductOwner && (
-                      <PayButton book={book} userAttributes={userAttributes} />
-                    )
-                  ) : (
-                    <Link to='/profile' className='link'>
-                      Verify Email
-                    </Link>
-                  )}
-                </div>
-              </div>
             </Card>
             <div className='text-center'>
               {isProductOwner && (

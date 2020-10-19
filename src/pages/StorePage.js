@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { API, graphqlOperation } from 'aws-amplify'
-import { Loading, Tabs, Icon } from 'element-react'
+import { Tabs } from 'antd'
+import {
+  MailOutlined,
+  AppstoreOutlined,
+  SettingOutlined,
+} from '@ant-design/icons'
+import { Loading, Icon } from 'element-react'
 import { Link } from 'react-router-dom'
 import NewBook from '../components/NewBook'
 import Books from '../components/Books'
@@ -33,6 +39,8 @@ export const getStore = /* GraphQL */ `
     }
   }
 `
+
+const { TabPane } = Tabs
 
 const StorePage = ({ storeId, user, userAttributes }) => {
   const [store, setStore] = useState(null)
@@ -89,7 +97,36 @@ const StorePage = ({ storeId, user, userAttributes }) => {
           {formatProductDate(store.createdAt)}
         </span>
       </div>
-      <Tabs type='border-card' value={isStoreOwner ? '1' : '2'}>
+      <Tabs
+        style={{ display: 'flex' }}
+        mode='horizontal'
+        selectedKeys={isStoreOwner ? '1' : '2'}
+      >
+        {isStoreOwner && (
+          <TabPane key='1' tab='Add Books' icon={<MailOutlined />}>
+            {isEmailVerified ? (
+              <NewBook storeId={storeId} setStore={setStore} store={store} />
+            ) : (
+              <Link to='/profile' className='header'>
+                Verify your email before adding products
+              </Link>
+            )}
+          </TabPane>
+        )}
+        <TabPane key='2' tab='Books' icon={<AppstoreOutlined />}>
+          <div className='product-list'>
+            {store.books.items.map((book) => (
+              <Books
+                key={book.id}
+                book={book}
+                setStore={setStore}
+                store={store}
+              />
+            ))}
+          </div>
+        </TabPane>
+      </Tabs>
+      {/* <Tabs type='border-card' value={isStoreOwner ? '1' : '2'}>
         {isStoreOwner && (
           <Tabs.Pane
             label={
@@ -129,7 +166,7 @@ const StorePage = ({ storeId, user, userAttributes }) => {
             ))}
           </div>
         </Tabs.Pane>
-      </Tabs>
+      </Tabs> */}
     </>
   )
 }
